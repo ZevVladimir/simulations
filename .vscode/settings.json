@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "structs.h": "c",
+        "limits": "c",
+        "__node_handle": "cpp",
+        "integrators.h": "c"
+    }
+}
