@@ -16,4 +16,4 @@ vy2=0.0
 
 
 
-./sim.o $N1 $N2 $snaps $h $outpt $x1 $y1 $vx1 $vy1 $x2 $y2 $vx2 $vy2
+./nbody_sim.o $N1 $N2 $snaps $h $outpt $x1 $y1 $vx1 $vy1 $x2 $y2 $vx2 $vy2

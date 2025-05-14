@@ -163,7 +163,7 @@ def run_simulation():
 
         # Construct the command
         command = [
-            "./sim.o",
+            "./nbody_sim.o",
             str(g1_num_particles),
             str(g2_num_particles),
             str(num_timesteps),
@@ -251,7 +251,7 @@ def continue_simulation():
 
         # Construct the command with the updated parameters
         command = [
-            "./sim.o", 
+            "./nbody_sim.o", 
             str(parameters["g1_num_particles"]),
             str(parameters["g2_num_particles"]),
             str(additional_timesteps),
