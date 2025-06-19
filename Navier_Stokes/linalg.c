@@ -180,3 +180,31 @@ void matrix_copy(matrix A, matrix B){
         }
     }
 }
+
+double max_val(matrix A){
+    double max_val = -__DBL_MAX__;
+
+    for (int i = 0; i < A.nrow; i++){
+        for (int j = 0; j < A.ncol; j++){
+            if (A.M[i][j] > max_val){
+                max_val = A.M[i][j];
+            }
+        }
+    }
+
+    return max_val;
+}
+
+double min_val(matrix A){
+    double min_val = __DBL_MAX__;
+
+    for (int i = 0; i < A.nrow; i++){
+        for (int j = 0; j < A.ncol; j++){
+            if (A.M[i][j] < min_val){
+                min_val = A.M[i][j];
+            }
+        }
+    }
+
+    return min_val;
+}

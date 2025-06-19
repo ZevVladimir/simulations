@@ -15,5 +15,8 @@ adv_2d:
 room_2d:
 	gcc -I. -o room_2d room_2d.c Navier_Stokes/linalg.c Navier_Stokes/fdm.c -lm
 
+nav_stoke:
+	gcc -I. -o nav_stoke Navier_Stokes/main.c Navier_Stokes/linalg.c Navier_Stokes/fdm.c Navier_Stokes/fluiddyn.c Navier_Stokes/poisson_slvr.c -lm
+
 clean:
 	rm -f *.o nbody_sim hydro_sim

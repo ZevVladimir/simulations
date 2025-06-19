@@ -44,7 +44,7 @@ matrix poisson(matrix f, double dx, double dy, int itmax, double tol){
     }
     printf("Error: maximum number of iterations achieved for Poisson equation.\n");
 
-    u.M = freem(u);
-    u0.M = freem(u0);
+    free_matrix(&u);
+    free_matrix(&u0);
     exit(1);
 }

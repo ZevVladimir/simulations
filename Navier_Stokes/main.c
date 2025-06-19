@@ -247,7 +247,53 @@ int main(int argc, char *argv[]){
         matrix_copy(v, dpsidx);
 
         // Check that the new values satisfy the continuity equation that \del * u is close to 0 or that the fluid is still incompressible
-        
+        u0 = reshape_matrix(u, nx*ny, 1);
+        v0 = reshape_matrix(v, nx*ny, 1);
 
+        dudx0 = matrix_multiplication(DX,u0);
+        dvdy0 = matrix_multiplication(DY,v0);
+
+        dudx = reshape_matrix(dudx0,nx,ny);
+        dvdy = reshape_matrix(dvdy0,nx,ny);
+
+        matrix continuity_ret = continuity_check(dudx,dvdy);
+
+        printf("Iteration: %d | ", t);
+        printf("Time: %lf | ", (double)t * dt);
+        printf("Progress: %.2lf%%\n", (double)100 * t / it_max);
+        printf("Continuity max: %E | ", max_val(check_continuity));
+        printf("Continuity min: %E\n", min_val(check_continuity));
+
+        free_matrix(&u0);
+        free_matrix(&v0);
+        free_matrix(&dudx0);
+        free_matrix(&dvdy0);
+
+        //TODO output values
+
+        free_matrix(&dwdx);
+        free_matrix(&dwdy);
+        free_matrix(&d2wdx2);
+        free_matrix(&d2wdy2);
+        free_matrix(&dpsidx);
+        free_matrix(&dpsidy);
+        free_matrix(&dudx);
+        free_matrix(&dudy);
+        free_matrix(&dvdx);
+        free_matrix(&dvdy);
+        free_matrix(&check_continuity);
     }
+
+    free_matrix(&u);
+    free_matrix(&v);
+    free_matrix(&w);
+    free_matrix(&psi);
+    free_matrix(&DX);
+    free_matrix(&DY);
+    free_matrix(&DX2);
+    free_matrix(&DY2);
+
+    printf("Simulation complete!\n");
+
+    return 0;
 }

@@ -23,7 +23,7 @@ void voritcity_euler(matrix w, matrix u, matrix v, matrix dwdx, matrix dwdy, mat
     }
 }
 
-matrix continuity_eqtn(matrix dudx, matrix dvdy){
+matrix continuity_check(matrix dudx, matrix dvdy){
     matrix cont_mtrx = init_matrix(dudx.nrow, dudx.ncol);
 
     for (int i = 0; i < dudx.nrow; i++){

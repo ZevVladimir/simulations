@@ -26,3 +26,7 @@ matrix matrix_multiplication(matrix A, matrix B);
 void invert_sign(matrix A);
 
 void matrix_copy(matrix A, matrix B);
+
+double max_val(matrix A);
+
+double min_val(matrix A);
