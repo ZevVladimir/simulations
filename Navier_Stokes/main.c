@@ -222,5 +222,32 @@ int main(int argc, char *argv[]){
         dpsidx = reshape_matrix(dpsidx0,nx,ny);
         dpsidy = reshape_matrix(dpsidy0,nx,ny);
 
+        free_matrix(&psi0);
+        free_matrix(&dpsidx0);
+        free_matrix(&dpsidy0);
+
+        // Computes velocities using the fact that the stream function is built for incompressible flows
+        psi0 = reshape_matrix(psi, nx * ny, 1);
+        dpsidx0 = matrix_multiplication(DX, psi0);
+        dpsidy0 = matrix_multiplication(DY, psi0);
+
+        dpsidx = reshape_matrix(dpsidx0, nx, ny);
+        dpsidy = reshape_matrix(dpsidy0, nx, ny);
+
+        free_matrix(&psi0);
+        free_matrix(&dpsidx0);
+        free_matrix(&dpsidy0);
+
+        free_matrix(&u);
+        free_matrix(&v);
+        u = init_matrix(nx, ny);
+        v = init_matrix(nx, ny);
+        matrix_copy(u, dpsidy);
+        invert_sign(dpsidx);
+        matrix_copy(v, dpsidx);
+
+        // Check that the new values satisfy the continuity equation that \del * u is close to 0 or that the fluid is still incompressible
+        
+
     }
 }
