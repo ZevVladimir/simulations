@@ -5,6 +5,11 @@
         "__node_handle": "cpp",
         "integrators.h": "c",
         "stdlib.h": "c",
-        "cmath": "c"
+        "cmath": "c",
+        "random": "c",
+        "algorithm": "c",
+        "stdio.h": "c",
+        "fluiddyn.h": "c",
+        "numbers": "c"
     }
 }
