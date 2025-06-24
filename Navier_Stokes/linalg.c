@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <Navier_Stokes/linalg.h>
 
-void zero_matrix(matrix A){
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            A.M[i][j] = 0.0;
+void zero_matrix(matrix *A){
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            A->M[i][j] = 0.0;
         }
     }
 }
@@ -37,11 +37,11 @@ double **alloc_matrix(int nrow, int ncol){
     return M;
 }
 
-matrix init_matrix(int nrow, int ncol){
-    matrix A;
-    A.M = alloc_matrix(nrow, ncol);
-    A.nrow = nrow;
-    A.ncol = ncol;
+matrix *init_matrix(int nrow, int ncol){
+    matrix *A = malloc(sizeof(matrix));
+    A->M = alloc_matrix(nrow, ncol);
+    A->nrow = nrow;
+    A->ncol = ncol;
     zero_matrix(A);
 
     return A;
@@ -65,32 +65,29 @@ void free_matrix(matrix *A){
     free(A->M);
 }
 
-matrix kronecker_prod(matrix *A, matrix *B){
+matrix *kronecker_prod(matrix *A, matrix *B){
     int a = A->nrow;
     int b = A->ncol;
     int p = B->nrow;
     int q = B->ncol;
 
-    matrix C;
-    C.nrow = a * p;
-    C.ncol = b * q;
-    C.M = alloc_matrix(C.nrow, C.ncol);
+    matrix *C = init_matrix(a*p,b*q);
 
-    for (int i = 0; i < C.nrow; i++){
-        for (int j = 0; j < C.ncol; j++){
-            C.M[i][j] = A->M[i/p][j/q] * B->M[i%p][j%q];
+    for (int i = 0; i < C->nrow; i++){
+        for (int j = 0; j < C->ncol; j++){
+            C->M[i][j] = A->M[i/p][j/q] * B->M[i%p][j%q];
         }
     }
     return C;
 }
 
-matrix iden_matrix(int n){
-    matrix I = init_matrix(n,n);
+matrix *iden_matrix(int n){
+    matrix *I = init_matrix(n,n);
 
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++){
             if (i == j){
-                I.M[i][j] = 1.0;
+                I->M[i][j] = 1.0;
             }
         }
     }
@@ -98,16 +95,16 @@ matrix iden_matrix(int n){
     return I;
 }
 
-matrix reshape_matrix(matrix A, int new_nrow, int new_ncol){
-    if ((A.nrow * A.ncol) != (new_nrow * new_ncol))
+matrix *reshape_matrix(matrix *A, int new_nrow, int new_ncol){
+    if ((A->nrow * A->ncol) != (new_nrow * new_ncol))
     {
         printf("Error: the reshaped matrix must have the same number of elements\n");
-        printf("Number of elements of input matrix: %d\n", A.nrow * A.ncol);
+        printf("Number of elements of input matrix: %d\n", A->nrow * A->ncol);
         printf("Number of elements of output matrix: %d\n", new_nrow * new_ncol);
         exit(1);
     }
 
-    matrix B = init_matrix(new_nrow,new_ncol);
+    matrix *B = init_matrix(new_nrow,new_ncol);
 
     // Indices for the inputted matrix
     int k,l;
@@ -116,9 +113,9 @@ matrix reshape_matrix(matrix A, int new_nrow, int new_ncol){
 
     for (int i = 0; i < new_nrow; i++){
         for (int j = 0; j < new_ncol; j++){
-            B.M[i][j] = A.M[k][l];
+            B->M[i][j] = A->M[k][l];
             //Also increment k and l according to how many columns there are in A
-            if (l < A.ncol - 1){
+            if (l < A->ncol - 1){
                 l++;
             }
             else{
@@ -131,33 +128,33 @@ matrix reshape_matrix(matrix A, int new_nrow, int new_ncol){
     return B;
 }
 
-matrix matrix_transpose(matrix A){
-    matrix A_T = init_matrix(A.ncol,A.nrow);
+matrix *matrix_transpose(matrix *A){
+    matrix *A_T = init_matrix(A->ncol,A->nrow);
 
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            A_T.M[i][j] = A.M[j][i];
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            A_T->M[j][i] = A->M[i][j];
         }
     }
 
     return A_T;
 }
 
-matrix matrix_multiplication(matrix A, matrix B){
-    if (A.ncol != B.nrow){
-        printf("Error: the number of columns of A should be equal to the number of rows of B");
+matrix *matrix_multiplication(matrix *A, matrix *B){
+    if (A->ncol != B->nrow){
+        printf("Error: the number of columns of A (%d) should be equal to the number of rows of B(%d)\n",A->ncol,B->nrow);
         exit(1);
     }
     
     // We can transpose B to take advantage of the fact that C is row major based
-    matrix B_T = matrix_transpose(B);
+    matrix *B_T = matrix_transpose(B);
 
-    matrix C = init_matrix(A.nrow,B.ncol);
+    matrix *C = init_matrix(A->nrow,B->ncol);
 
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < B.ncol; j++){
-            for (int k = 0; k < A.ncol; k++){
-                C.M[i][j] += A.M[i][k] * B_T.M[j][k];
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < B->ncol; j++){
+            for (int k = 0; k < A->ncol; k++){
+                C->M[i][j] += A->M[i][k] * B_T->M[j][k];
             }
         }
     }
@@ -165,29 +162,29 @@ matrix matrix_multiplication(matrix A, matrix B){
     return C;
 }
 
-void invert_sign(matrix A){
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            A.M[i][j] = -A.M[i][j];
+void invert_sign(matrix *A){
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            A->M[i][j] = -A->M[i][j];
         }
     }
 }
 
-void matrix_copy(matrix A, matrix B){
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            A.M[i][j] = B.M[i][j];
+void matrix_copy(matrix *A, matrix *B){
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            A->M[i][j] = B->M[i][j];
         }
     }
 }
 
-double max_val(matrix A){
+double max_val(matrix *A){
     double max_val = -__DBL_MAX__;
 
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            if (A.M[i][j] > max_val){
-                max_val = A.M[i][j];
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            if (A->M[i][j] > max_val){
+                max_val = A->M[i][j];
             }
         }
     }
@@ -195,16 +192,46 @@ double max_val(matrix A){
     return max_val;
 }
 
-double min_val(matrix A){
+double min_val(matrix *A){
     double min_val = __DBL_MAX__;
 
-    for (int i = 0; i < A.nrow; i++){
-        for (int j = 0; j < A.ncol; j++){
-            if (A.M[i][j] < min_val){
-                min_val = A.M[i][j];
+    for (int i = 0; i < A->nrow; i++){
+        for (int j = 0; j < A->ncol; j++){
+            if (A->M[i][j] < min_val){
+                min_val = A->M[i][j];
             }
         }
     }
 
     return min_val;
+}
+
+void print_matrix(matrix *A)
+{
+    int i, j;
+    printf("\n");
+    for (i = 0; i < A->nrow; i++)
+    {
+        printf("[");
+        for (j = 0; j < A->ncol; j++)
+        {
+            if (j == A->ncol - 1)
+            {
+                printf(" %.4lf ", A->M[i][j]);
+            }
+            else
+            {
+                printf(" %.4lf", A->M[i][j]);
+            }
+        }
+        if (i == A->ncol - 1)
+        {
+            printf("]");
+        }
+        else
+        {
+            printf("]");
+        }
+        printf("\n");
+    }
 }

@@ -1,32 +1,38 @@
+#ifndef LINALG_H
+#define LINALG_H
+
 typedef struct matrix
 {
     double **M;
     int nrow;
     int ncol;
-} matrix;
+}matrix;
+#endif
 
-void zero_matrix(matrix A);
+void zero_matrix(matrix *A);
 
 double **alloc_matrix(int nrow, int ncol);
 
-matrix init_matrix(int nrow, int ncol);
+matrix *init_matrix(int nrow, int ncol);
 
 void free_matrix(matrix *A);
 
-matrix kronecker_prod(matrix *A, matrix *B);
+matrix *kronecker_prod(matrix *A, matrix *B);
 
-matrix iden_matrix(int n);
+matrix *iden_matrix(int n);
 
-matrix matrix_transpose(matrix A);
+matrix *matrix_transpose(matrix *A);
 
-matrix reshape_matrix(matrix A, int new_nrow, int new_ncol);
+matrix *reshape_matrix(matrix *A, int new_nrow, int new_ncol);
 
-matrix matrix_multiplication(matrix A, matrix B);
+matrix *matrix_multiplication(matrix *A, matrix *B);
 
-void invert_sign(matrix A);
+void invert_sign(matrix *A);
 
-void matrix_copy(matrix A, matrix B);
+void matrix_copy(matrix *A, matrix *B);
 
-double max_val(matrix A);
+double max_val(matrix *A);
 
-double min_val(matrix A);
+double min_val(matrix *A);
+
+void print_matrix(matrix *A);
